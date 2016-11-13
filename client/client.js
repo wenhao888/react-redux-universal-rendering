@@ -1,22 +1,24 @@
 import React from "react";
 import {render} from "react-dom";
-import {createStore} from "redux";
+import {createStore, combineReducers} from "redux";
 
 import {Provider} from "react-redux";
 
 import { Router, browserHistory } from 'react-router';
-import reducers from "../components/reducers";
+
+import {  ReduxAsyncConnect, asyncConnect, reducer as reduxAsyncConnect } from '~/vendor/redux-async-connect'
+
 import routes from "../components/routes";
 
-var {studentReducer} = reducers;
-const store = createStore(studentReducer, _data);
+const store = createStore(combineReducers({reduxAsyncConnect}), _data);
 
-/*
+
 render(<Provider store={store} key="provider">
-            <Router history={browserHistory}>
+            <Router history={browserHistory} render={(props) => <ReduxAsyncConnect {...props}/>} >
                 {routes}
             </Router>
         </Provider>, document.getElementById("container"));
-        */
+
+
 
 

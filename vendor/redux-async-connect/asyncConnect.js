@@ -130,8 +130,11 @@ export function asyncConnect(mapStateToProps) {
   return Component => {
     Component.reduxAsyncConnect = (params, store, helpers) => componentLoadCb(mapStateToProps, params, store, helpers);
 
+
     const finalMapStateToProps = state => {
-      return Object.keys(mapStateToProps).reduce((result, key) => ({...result, [key]: state.reduxAsyncConnect[key]}), {});
+
+      //changed by wlin to use state.reduxAsyncConnect[key].data directly
+      return Object.keys(mapStateToProps).reduce((result, key) => ({...result, [key]: state.reduxAsyncConnect[key].data}), {});
     };
 
     return connect(finalMapStateToProps)(Component);

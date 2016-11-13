@@ -6,14 +6,15 @@ import initialData  from "../initialData";
 
 
 @asyncConnect({
-    students:(params, helpers) => Promise.resolve(initialData.students)
+    students: ()=>initialData.students
 })export default class StudentList extends Component {
     render() {
         var {students} = this.props;
+
         return (
            <div>
                {
-                   students.data.map(s=> {
+                   students.map(s=> {
                        return <Student student={s} key={s.id} />
                    })
 

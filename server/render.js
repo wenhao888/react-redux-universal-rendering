@@ -12,7 +12,6 @@ function render (req, res, next) {
     match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
         loadOnServer(renderProps, store).then(() => {
 
-
             const content = renderToString(
                 <Provider store={store} key="provider">
                     <ReduxAsyncConnect {...renderProps} />
