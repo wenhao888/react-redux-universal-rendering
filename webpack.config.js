@@ -1,4 +1,6 @@
 var webpack = require('webpack');
+var path= require("path");
+
 module.exports = {
     entry: [
         "./client/client.js"
@@ -20,7 +22,10 @@ module.exports = {
         ]
     },
     resolve:{
-        extensions:['','.js','.json', ".jsx"]
+        extensions:['','.js','.json', ".jsx"],
+        root: [
+            path.resolve('.')
+        ]
     },
     plugins: [
         new webpack.NoErrorsPlugin()

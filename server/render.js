@@ -1,29 +1,28 @@
 import React from "react";
-import {renderToString} from "react-dom/server";
-import { RouterContext, match } from 'react-router'
-import { createStore } from 'redux'
-import {Provider} from "react-redux";
+import { renderToString } from 'react-dom/server'
+import { match, RouterContext } from 'react-router'
+import { ReduxAsyncConnect, loadOnServer, reducer as reduxAsyncConnect } from '~/vendor/redux-async-connect'
+import { Provider} from 'react-redux';
+import { createStore, combineReducers } from 'redux';
+import routes from "~/components/routes";
 
-import routes from "../components/routes";
-import reducers from "../components/reducers";
-
-import initialData  from "../components/initialData";
-
-var {studentReducer} = reducers;
-
-var store = createStore(studentReducer, initialData);
+const store = createStore(combineReducers({reduxAsyncConnect}));
 
 function render (req, res, next) {
     match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
+        loadOnServer(renderProps, store).then(() => {
 
-        const content = renderToString(
-                <Provider store={store}>
-                    { <RouterContext {...renderProps}/> }
+
+            const content = renderToString(
+                <Provider store={store} key="provider">
+                    <ReduxAsyncConnect {...renderProps} />
                 </Provider>);
 
-        const data = JSON.stringify(store.getState());
 
-        res.render("index.ejs",{content: content, data:data });
+            const data = JSON.stringify(store.getState());
+
+            res.render("index.ejs",{content: content, data: data });
+        })
     })
 }
 

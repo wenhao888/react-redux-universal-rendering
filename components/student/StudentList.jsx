@@ -1,30 +1,28 @@
 import React, {Component} from "react";
 import Student from "./Student";
-import {connect} from "react-redux";
+import {asyncConnect } from '~/vendor/redux-async-connect'
+
+import initialData  from "../initialData";
 
 
-@connect(state => ({students: state.students }))
-export default class StudentList extends Component {
+@asyncConnect({
+    students:(params, helpers) => Promise.resolve(initialData.students)
+})export default class StudentList extends Component {
     render() {
         var {students} = this.props;
-
         return (
-            <ul>
-                {
-                    students.map(s=> {
-                         return <Student student={s} key={s.id} />
-                    })
+           <div>
+               {
+                   students.data.map(s=> {
+                       return <Student student={s} key={s.id} />
+                   })
 
-                }
-            </ul>
+               }
+           </div>
         )
     }
 }
 
-
-StudentList.contextTypes = {
-    store: React.PropTypes.object
-};
 
 
 

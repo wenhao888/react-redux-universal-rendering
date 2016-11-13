@@ -81,7 +81,13 @@
 
 	var store = (0, _redux.createStore)(studentReducer, _data);
 
-	(0, _reactDom.render)(_react2.default.createElement(_reactRedux.Provider, { store: store, key: "provider" }, _react2.default.createElement(_reactRouter.Router, { history: _reactRouter.browserHistory }, _routes2.default)), document.getElementById("container"));
+	/*
+	render(<Provider store={store} key="provider">
+	            <Router history={browserHistory}>
+	                {routes}
+	            </Router>
+	        </Provider>, document.getElementById("container"));
+	        */
 
 /***/ },
 /* 2 */
@@ -28188,7 +28194,11 @@
 
 	var _Student2 = _interopRequireDefault(_Student);
 
-	var _reactRedux = __webpack_require__(194);
+	var _reduxAsyncConnect = __webpack_require__(263);
+
+	var _initialData = __webpack_require__(266);
+
+	var _initialData2 = _interopRequireDefault(_initialData);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28198,8 +28208,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var StudentList = (_dec = (0, _reactRedux.connect)(function (state) {
-	    return { students: state.students };
+	var StudentList = (_dec = (0, _reduxAsyncConnect.asyncConnect)({
+	    students: function students(params, helpers) {
+	        return Promise.resolve(_initialData2.default.students);
+	    }
 	}), _dec(_class = function (_Component) {
 	    _inherits(StudentList, _Component);
 
@@ -28214,11 +28226,10 @@
 	        value: function render() {
 	            var students = this.props.students;
 
-
 	            return _react2.default.createElement(
-	                "ul",
+	                "div",
 	                null,
-	                students.map(function (s) {
+	                students.data.map(function (s) {
 	                    return _react2.default.createElement(_Student2.default, { student: s, key: s.id });
 	                })
 	            );
@@ -28228,11 +28239,6 @@
 	    return StudentList;
 	}(_react.Component)) || _class);
 	exports.default = StudentList;
-
-
-	StudentList.contextTypes = {
-	    store: _react2.default.PropTypes.object
-	};
 
 /***/ },
 /* 262 */
@@ -28294,6 +28300,520 @@
 	}(_react.Component);
 
 	exports.default = Student;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.asyncConnect = exports.loadSuccess = exports.clearKey = exports.reducer = exports.ReduxAsyncConnect = exports.loadOnServer = undefined;
+
+	var _ReduxAsyncConnect = __webpack_require__(264);
+
+	var _ReduxAsyncConnect2 = _interopRequireDefault(_ReduxAsyncConnect);
+
+	var _asyncConnect = __webpack_require__(265);
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { default: obj };
+	}
+
+	exports.loadOnServer = _ReduxAsyncConnect.loadOnServer;
+	exports.ReduxAsyncConnect = _ReduxAsyncConnect2.default;
+	exports.reducer = _asyncConnect.reducer;
+	exports.clearKey = _asyncConnect.clearKey;
+	exports.loadSuccess = _asyncConnect.loadSuccess;
+	exports.asyncConnect = _asyncConnect.asyncConnect;
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () {
+	  function defineProperties(target, props) {
+	    for (var i = 0; i < props.length; i++) {
+	      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+	    }
+	  }return function (Constructor, protoProps, staticProps) {
+	    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+	  };
+	}();
+
+	var _class, _temp;
+
+	var _slicedToArray = function () {
+	  function sliceIterator(arr, i) {
+	    var _arr = [];var _n = true;var _d = false;var _e = undefined;try {
+	      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+	        _arr.push(_s.value);if (i && _arr.length === i) break;
+	      }
+	    } catch (err) {
+	      _d = true;_e = err;
+	    } finally {
+	      try {
+	        if (!_n && _i["return"]) _i["return"]();
+	      } finally {
+	        if (_d) throw _e;
+	      }
+	    }return _arr;
+	  }return function (arr, i) {
+	    if (Array.isArray(arr)) {
+	      return arr;
+	    } else if (Symbol.iterator in Object(arr)) {
+	      return sliceIterator(arr, i);
+	    } else {
+	      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+	    }
+	  };
+	}();
+
+	var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+	  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+	} : function (obj) {
+	  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+	};
+
+	exports.loadOnServer = loadOnServer;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _RouterContext = __webpack_require__(219);
+
+	var _RouterContext2 = _interopRequireDefault(_RouterContext);
+
+	var _asyncConnect = __webpack_require__(265);
+
+	var _reactRedux = __webpack_require__(194);
+
+	function _interopRequireDefault(obj) {
+	  return obj && obj.__esModule ? obj : { default: obj };
+	}
+
+	function _classCallCheck(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	}
+
+	function _possibleConstructorReturn(self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }return call && ((typeof call === "undefined" ? "undefined" : _typeof2(call)) === "object" || typeof call === "function") ? call : self;
+	}
+
+	function _inherits(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof2(superClass)));
+	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	}
+
+	var _React$PropTypes = _react2.default.PropTypes,
+	    array = _React$PropTypes.array,
+	    func = _React$PropTypes.func,
+	    object = _React$PropTypes.object,
+	    any = _React$PropTypes.any;
+
+	/**
+	 * We need to iterate over all components for specified routes.
+	 * Components array can include objects if named components are used:
+	 * https://github.com/rackt/react-router/blob/latest/docs/API.md#named-components
+	 *
+	 * @param components
+	 * @param iterator
+	 */
+
+	function eachComponents(components, iterator) {
+	  for (var i = 0, l = components.length; i < l; i++) {
+	    // eslint-disable-line id-length
+	    if (_typeof(components[i]) === 'object') {
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = Object.entries(components[i])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var _step$value = _slicedToArray(_step.value, 2),
+	              key = _step$value[0],
+	              value = _step$value[1];
+
+	          iterator(value, i, key);
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	    } else {
+	      iterator(components[i], i);
+	    }
+	  }
+	}
+
+	function filterAndFlattenComponents(components) {
+	  var flattened = [];
+	  eachComponents(components, function (Component) {
+	    if (Component && Component.reduxAsyncConnect) {
+	      flattened.push(Component);
+	    }
+	  });
+	  return flattened;
+	}
+
+	function asyncConnectPromises(components, params, store, helpers) {
+	  return components.map(function (Component) {
+	    return Component.reduxAsyncConnect(params, store, helpers);
+	  }).filter(function (result) {
+	    return result && result.then instanceof Function;
+	  });
+	}
+
+	function loadOnServer(_ref, store, helpers) {
+	  var components = _ref.components,
+	      params = _ref.params;
+
+	  return Promise.all(asyncConnectPromises(filterAndFlattenComponents(components), params, store, helpers)).catch(function (error) {
+	    return console.error('reduxAsyncConnect server promise error: ', error);
+	  }).then(function () {
+	    store.dispatch((0, _asyncConnect.endGlobalLoad)());
+	  });
+	}
+
+	var loadDataCounter = 0;
+
+	var ReduxAsyncConnect = (_temp = _class = function (_React$Component) {
+	  _inherits(ReduxAsyncConnect, _React$Component);
+
+	  _createClass(ReduxAsyncConnect, [{
+	    key: 'isLoaded',
+	    value: function isLoaded() {
+	      return this.context.store.getState().reduxAsyncConnect.loaded;
+	    }
+	  }]);
+
+	  function ReduxAsyncConnect(props, context) {
+	    _classCallCheck(this, ReduxAsyncConnect);
+
+	    var _this = _possibleConstructorReturn(this, (ReduxAsyncConnect.__proto__ || Object.getPrototypeOf(ReduxAsyncConnect)).call(this, props, context));
+
+	    _this.state = {
+	      propsToShow: _this.isLoaded() ? props : null
+	    };
+	    return _this;
+	  }
+
+	  _createClass(ReduxAsyncConnect, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var dataLoaded = this.isLoaded();
+
+	      if (!dataLoaded) {
+	        // we dont need it if we already made it on server-side
+	        this.loadAsyncData(this.props);
+	      }
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.loadAsyncData(nextProps);
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(nextProps, nextState) {
+	      return this.state.propsToShow !== nextState.propsToShow;
+	    }
+	  }, {
+	    key: 'loadAsyncData',
+	    value: function loadAsyncData(props) {
+	      var _this2 = this;
+
+	      var components = props.components,
+	          params = props.params,
+	          helpers = props.helpers;
+
+	      var store = this.context.store;
+	      var promises = asyncConnectPromises(filterAndFlattenComponents(components), params, store, helpers);
+
+	      loadDataCounter++;
+
+	      if (promises.length) {
+	        this.props.beginGlobalLoad();
+	        (function (loadDataCounterOriginal) {
+	          Promise.all(promises).catch(function (error) {
+	            return console.error('reduxAsyncConnect server promise error: ', error);
+	          }).then(function () {
+	            // We need to change propsToShow only if loadAsyncData that called this promise
+	            // is the last invocation of loadAsyncData method. Otherwise we can face situation
+	            // when user is changing route several times and we finally show him route that has
+	            // loaded props last time and not the last called route
+	            if (loadDataCounter === loadDataCounterOriginal) {
+	              _this2.setState({ propsToShow: props });
+	            }
+	            _this2.props.endGlobalLoad();
+	          });
+	        })(loadDataCounter);
+	      } else {
+	        this.setState({ propsToShow: props });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var propsToShow = this.state.propsToShow;
+
+	      return propsToShow && this.props.render(propsToShow);
+	    }
+	  }]);
+
+	  return ReduxAsyncConnect;
+	}(_react2.default.Component), _class.propTypes = {
+	  components: array.isRequired,
+	  params: object.isRequired,
+	  render: func.isRequired,
+	  beginGlobalLoad: func.isRequired,
+	  endGlobalLoad: func.isRequired,
+	  helpers: any
+	}, _class.contextTypes = {
+	  store: object.isRequired
+	}, _class.defaultProps = {
+	  render: function render(props) {
+	    return _react2.default.createElement(_RouterContext2.default, props);
+	  }
+	}, _temp);
+	exports.default = (0, _reactRedux.connect)(null, { beginGlobalLoad: _asyncConnect.beginGlobalLoad, endGlobalLoad: _asyncConnect.endGlobalLoad })(ReduxAsyncConnect);
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.END_GLOBAL_LOAD = exports.BEGIN_GLOBAL_LOAD = exports.CLEAR = exports.LOAD_FAIL = exports.LOAD_SUCCESS = exports.LOAD = undefined;
+
+	var _extends = Object.assign || function (target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i];for (var key in source) {
+	      if (Object.prototype.hasOwnProperty.call(source, key)) {
+	        target[key] = source[key];
+	      }
+	    }
+	  }return target;
+	};
+
+	exports.reducer = reducer;
+	exports.clearKey = clearKey;
+	exports.beginGlobalLoad = beginGlobalLoad;
+	exports.endGlobalLoad = endGlobalLoad;
+	exports.loadSuccess = loadSuccess;
+	exports.asyncConnect = asyncConnect;
+
+	var _reactRedux = __webpack_require__(194);
+
+	function _toConsumableArray(arr) {
+	  if (Array.isArray(arr)) {
+	    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+	      arr2[i] = arr[i];
+	    }return arr2;
+	  } else {
+	    return Array.from(arr);
+	  }
+	}
+
+	function _defineProperty(obj, key, value) {
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+	  } else {
+	    obj[key] = value;
+	  }return obj;
+	}
+
+	var LOAD = exports.LOAD = 'reduxAsyncConnect/LOAD';
+	var LOAD_SUCCESS = exports.LOAD_SUCCESS = 'reduxAsyncConnect/LOAD_SUCCESS';
+	var LOAD_FAIL = exports.LOAD_FAIL = 'reduxAsyncConnect/LOAD_FAIL';
+	var CLEAR = exports.CLEAR = 'reduxAsyncConnect/CLEAR';
+	var BEGIN_GLOBAL_LOAD = exports.BEGIN_GLOBAL_LOAD = 'reduxAsyncConnect/BEGIN_GLOBAL_LOAD';
+	var END_GLOBAL_LOAD = exports.END_GLOBAL_LOAD = 'reduxAsyncConnect/END_GLOBAL_LOAD';
+
+	function reducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { loaded: false };
+	  var action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	  var stateSlice = state[action.key];
+
+	  switch (action.type) {
+	    case BEGIN_GLOBAL_LOAD:
+	      return _extends({}, state, {
+	        loaded: false
+	      });
+	    case END_GLOBAL_LOAD:
+	      return _extends({}, state, {
+
+	        loaded: true
+	      });
+	    case LOAD:
+	      return _extends({}, state, _defineProperty({}, action.key, _extends({}, stateSlice, {
+	        loading: true,
+	        loaded: false
+	      })));
+	    case LOAD_SUCCESS:
+	      return _extends({}, state, _defineProperty({}, action.key, _extends({}, stateSlice, {
+	        loading: false,
+	        loaded: true,
+	        data: action.data
+	      })));
+	    case LOAD_FAIL:
+	      return _extends({}, state, _defineProperty({}, action.key, _extends({}, stateSlice, {
+	        loading: false,
+	        loaded: false,
+	        error: action.error
+	      })));
+	    case CLEAR:
+	      return _extends({}, state, _defineProperty({}, action.key, {
+	        loaded: false,
+	        loading: false
+	      }));
+	    default:
+	      return state;
+	  }
+	}
+
+	function clearKey(key) {
+	  return {
+	    type: CLEAR,
+	    key: key
+	  };
+	}
+
+	function beginGlobalLoad() {
+	  return { type: BEGIN_GLOBAL_LOAD };
+	}
+
+	function endGlobalLoad() {
+	  return { type: END_GLOBAL_LOAD };
+	}
+
+	function load(key) {
+	  return {
+	    type: LOAD,
+	    key: key
+	  };
+	}
+
+	function loadSuccess(key, data) {
+	  return {
+	    type: LOAD_SUCCESS,
+	    key: key,
+	    data: data
+	  };
+	}
+
+	function loadFail(key, error) {
+	  return {
+	    type: LOAD_FAIL,
+	    key: key,
+	    error: error
+	  };
+	}
+
+	function componentLoadCb(mapStateToProps, params, store, helpers) {
+	  var dispatch = store.dispatch;
+
+	  var promises = Object.keys(mapStateToProps).reduce(function (result, key) {
+	    var promiseOrResult = mapStateToProps[key](params, _extends({}, helpers, { store: store }));
+
+	    if (promiseOrResult !== undefined) {
+	      if (promiseOrResult.then instanceof Function) {
+	        dispatch(load(key));
+	        promiseOrResult = promiseOrResult.then(function (nextData) {
+	          return dispatch(loadSuccess(key, nextData));
+	        }, function (err) {
+	          return dispatch(loadFail(key, err));
+	        });
+
+	        return [].concat(_toConsumableArray(result), [promiseOrResult]);
+	      }
+
+	      dispatch(loadSuccess(key, promiseOrResult));
+	    }
+	    return [].concat(_toConsumableArray(result));
+	  }, []);
+
+	  return promises.length === 0 ? null : Promise.all(promises);
+	}
+
+	function asyncConnect(mapStateToProps) {
+	  return function (Component) {
+	    Component.reduxAsyncConnect = function (params, store, helpers) {
+	      return componentLoadCb(mapStateToProps, params, store, helpers);
+	    };
+
+	    var finalMapStateToProps = function finalMapStateToProps(state) {
+	      return Object.keys(mapStateToProps).reduce(function (result, key) {
+	        return _extends({}, result, _defineProperty({}, key, state.reduxAsyncConnect[key]));
+	      }, {});
+	    };
+
+	    return (0, _reactRedux.connect)(finalMapStateToProps)(Component);
+	  };
+	}
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _students = __webpack_require__(267);
+
+	var _students2 = _interopRequireDefault(_students);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+	    students: _students2.default
+	};
+
+/***/ },
+/* 267 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var students = [{ id: 1, name: "wenhao" }, { id: 2, name: "haiyan" }, { id: 3, name: "michelle" }, { id: 4, name: "sally" }];
+
+	exports.default = students;
 
 /***/ }
 /******/ ]);
