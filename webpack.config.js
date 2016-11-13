@@ -6,7 +6,7 @@ module.exports = {
         "./client/client.js"
     ],
     output: {
-        path: './public/javascripts',
+        path: './public/dist',
         filename: "bundle.js"
     },
     module: {
