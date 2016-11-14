@@ -8,7 +8,7 @@ import { Router, browserHistory } from 'react-router';
 
 import {  ReduxAsyncConnect, asyncConnect, reducer as reduxAsyncConnect } from '~/vendor/redux-async-connect'
 
-import routes from "../components/routes";
+import routes from "~/components/routes";
 
 const store = createStore(combineReducers({reduxAsyncConnect}), _data);
 

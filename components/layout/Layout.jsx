@@ -7,7 +7,7 @@ class Layout extends Component {
         var {children} = this.props;
 
         return (
-            <div className={styles.content}>
+            <div >
                 <div>
                     this is the layout
                 </div>

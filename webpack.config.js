@@ -7,12 +7,12 @@ module.exports = {
     ],
     output: {
         path: './public/dist',
-        filename: "bundle.js",
-        libraryTarget: 'commonjs2'
+        filename: "bundle.js"
     },
     module: {
         loaders: [
-            { test: /\.js?$/, exclude: /node_modules/, loader: 'babel-loader'},
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+            { test: /\.jsx$/, exclude: /node_modules/, loader: 'babel-loader'},
             { test: /\.css$/, loader: "style!css" },
             { test: /\.scss$/, loader: "style-loader!css-loader?modules" },
             {test: /\.less/,loader: 'style-loader!css-loader!less-loader'}

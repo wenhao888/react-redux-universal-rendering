@@ -1,6 +1,6 @@
 import React from "react";
 import { renderToString } from 'react-dom/server'
-import { match, RouterContext } from 'react-router'
+import { match } from 'react-router'
 import { ReduxAsyncConnect, loadOnServer, reducer as reduxAsyncConnect } from '~/vendor/redux-async-connect'
 import { Provider} from 'react-redux';
 import { createStore, combineReducers } from 'redux';
@@ -20,7 +20,7 @@ function render (req, res, next) {
 
             const data = JSON.stringify(store.getState());
 
-            res.render("index.ejs",{content: content, data: data });
+            res.render("index.ejs",{content: "", data: data });
         })
     })
 }
